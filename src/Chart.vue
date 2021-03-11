@@ -1,7 +1,8 @@
 <template>
-    <div style="position: relative;">
+    <div v-if="wrapped" style="position: relative;">
         <canvas ref="canvas" />
     </div>
+    <canvas v-else ref="canvas" />
 </template>
 
 <script lang="ts">
@@ -31,6 +32,17 @@ export default defineComponent({
     plugins: {
       type: Array as PropType<PluginServiceRegistrationOptions[]>,
       default: () => []
+    },
+    /**
+     * Wrap the canvas element in a relatively positioned div.
+     *
+     * This is especially usefully when Chart.js is set to be responsive (default behaviour). This is because Chart.js
+     * needs a dedicated parent element to detect size changes.
+     * See https://www.chartjs.org/docs/latest/general/responsive.html#important-note for more information.
+     */
+    wrapped: {
+      type: Boolean,
+      default: () => true
     }
   },
   emits: {
@@ -43,7 +55,8 @@ export default defineComponent({
       type,
       data,
       options,
-      plugins
+      plugins,
+      wrapped
     } = toRefs(props)
 
     const canvas = ref<HTMLCanvasElement>(null as never) // will be populated after mounting
@@ -75,7 +88,7 @@ export default defineComponent({
       )
     }
     onMounted(renderChart)
-    watch(type, renderChart)
+    watch([type, wrapped], renderChart)
 
     onBeforeUnmount(() => {
       cleanupChartInstance(chartInstance, emit)
