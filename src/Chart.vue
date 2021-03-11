@@ -62,7 +62,7 @@ export default defineComponent({
     const canvas = ref<HTMLCanvasElement>(null as never) // will be populated after mounting
 
     const chartInstance = ref<Chart | null>(null)
-    const internalPlugins = [...plugins.value]
+    const internalPlugins = plugins.value.slice()
 
     /**
      * Indicates the Chart instance's `data` or `options` has been updated but `update()` is not invoked yet
