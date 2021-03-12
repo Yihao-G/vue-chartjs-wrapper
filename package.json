@@ -2,6 +2,23 @@
   "name": "vue-chartjs-wrapper",
   "version": "0.1.0-alpha.1",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yihao-G/vue-chartjs-wrapper"
+  },
+  "bugs": {
+    "url": "https://github.com/Yihao-G/vue-chartjs-wrapper/issues"
+  },
+  "keywords": [
+    "Chart",
+    "Diagram",
+    "Visualisation",
+    "Vue.js",
+    "Vue",
+    "Vue 3",
+    "Chart.js"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib src/index.ts && tsc --emitDeclarationOnly",
@@ -12,6 +29,7 @@
     "dist/*"
   ],
   "main": "./dist/vue-chartjs-wrapper.umd.js",
+  "unpkg": "./dist/vue-chartjs-wrapper.umd.min.js",
   "types": "./dist/src/index.d.ts",
   "dependencies": {
     "chart.js": "^2.9.4",
