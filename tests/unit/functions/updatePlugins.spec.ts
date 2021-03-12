@@ -1,14 +1,23 @@
 import updatePlugins from '@/functions/updatePlugins'
 
 describe('updatePlugins', () => {
-  it('should add new plugins', () => {
-    const plugin1 = { [Symbol('plugin1')]: null }
-    const plugin2 = { [Symbol('plugin2')]: null }
-    const plugin3 = { [Symbol('plugin3')]: null }
-    const plugin4 = { [Symbol('plugin4')]: null }
-    const plugin5 = { [Symbol('plugin5')]: null }
-    const plugin6 = { [Symbol('plugin6')]: null }
+  let plugin1: Record<PropertyKey, unknown>
+  let plugin2: Record<PropertyKey, unknown>
+  let plugin3: Record<PropertyKey, unknown>
+  let plugin4: Record<PropertyKey, unknown>
+  let plugin5: Record<PropertyKey, unknown>
+  let plugin6: Record<PropertyKey, unknown>
 
+  beforeEach(() => {
+    plugin1 = { [Symbol('plugin1')]: null }
+    plugin2 = { [Symbol('plugin2')]: null }
+    plugin3 = { [Symbol('plugin3')]: null }
+    plugin4 = { [Symbol('plugin4')]: null }
+    plugin5 = { [Symbol('plugin5')]: null }
+    plugin6 = { [Symbol('plugin6')]: null }
+  })
+
+  it('should add new plugins', () => {
     const initialPlugins = [plugin1, plugin2, plugin3]
     const updatedPlugins = [plugin1, plugin2, plugin3, plugin4, plugin5, plugin6]
 
@@ -18,13 +27,6 @@ describe('updatePlugins', () => {
   })
 
   it('should remove plugins', () => {
-    const plugin1 = { [Symbol('plugin1')]: null }
-    const plugin2 = { [Symbol('plugin2')]: null }
-    const plugin3 = { [Symbol('plugin3')]: null }
-    const plugin4 = { [Symbol('plugin4')]: null }
-    const plugin5 = { [Symbol('plugin5')]: null }
-    const plugin6 = { [Symbol('plugin6')]: null }
-
     const initialPlugins = [plugin1, plugin2, plugin3, plugin4, plugin5, plugin6]
     const updatedPlugins = [plugin1, plugin2, plugin3]
 
@@ -35,13 +37,6 @@ describe('updatePlugins', () => {
   })
 
   it('should add and remove plugins', () => {
-    const plugin1 = { [Symbol('plugin1')]: null }
-    const plugin2 = { [Symbol('plugin2')]: null }
-    const plugin3 = { [Symbol('plugin3')]: null }
-    const plugin4 = { [Symbol('plugin4')]: null }
-    const plugin5 = { [Symbol('plugin5')]: null }
-    const plugin6 = { [Symbol('plugin6')]: null }
-
     const initialPlugins = [plugin1, plugin2, plugin3, plugin4]
     const updatedPlugins = [plugin1, plugin3, plugin5, plugin6]
 
@@ -52,13 +47,6 @@ describe('updatePlugins', () => {
   })
 
   it('should not mutate pluginsProp', () => {
-    const plugin1 = { [Symbol('plugin1')]: null }
-    const plugin2 = { [Symbol('plugin2')]: null }
-    const plugin3 = { [Symbol('plugin3')]: null }
-    const plugin4 = { [Symbol('plugin4')]: null }
-    const plugin5 = { [Symbol('plugin5')]: null }
-    const plugin6 = { [Symbol('plugin6')]: null }
-
     const initialPlugins = [plugin1, plugin2, plugin3]
     const updatedPlugins = [plugin1, plugin2, plugin4, plugin5, plugin6]
     const updatedPluginsCopy = updatedPlugins.slice()

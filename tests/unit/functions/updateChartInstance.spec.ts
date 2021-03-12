@@ -1,5 +1,5 @@
 import { mocked } from 'ts-jest/utils'
-import { nextTick, ref } from 'vue'
+import { nextTick, Ref, ref } from 'vue'
 
 jest.mock('chart.js')
 // eslint-disable-next-line import/first
@@ -10,17 +10,22 @@ import updateChartInstance from '@/functions/updateChartInstance'
 describe('updateChartInstance', () => {
   const mockedChart = mocked(Chart, true)
 
+  let chartInstance: Ref<Chart | null>
+  let emitFn: jest.Mock
+  let dummyValue: Record<PropertyKey, unknown>
+
   const cases = (field: 'data' | 'options') => describe(`update ${field}`, () => {
     beforeEach(() => {
       mockedChart.mockClear()
+
+      chartInstance = ref(new (mockedChart as any)() as Chart)
+      emitFn = jest.fn()
+      dummyValue = {}
     })
 
     it('should correctly update the field', () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -28,11 +33,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should invoke update in the next tick when needsUpdate is false', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -42,11 +44,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should emit chart:update with empty payload in the next tick when needsUpdate is false', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -57,11 +56,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should immediately set needsUpdate to true', () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -69,11 +65,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should set needsUpdate to false in the next tick when needsUpdate is initially false', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -85,11 +78,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should still correctly update the field when needsUpdate is true', () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(true)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
@@ -97,11 +87,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should not invoke update, emit or change needsUpdate when needsUpdate become false after update', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(false)
       const needsUpdate = ref(true)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
       expect(needsUpdate.value).toBe(true)
@@ -114,11 +101,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should do nothing when both rendering and needsUpdate are true', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(true)
       const needsUpdate = ref(true)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
       expect(needsUpdate.value).toBe(true)
@@ -132,11 +116,8 @@ describe('updateChartInstance', () => {
     })
 
     it('should do nothing when rendering is true but needsUpdate is false', async () => {
-      const chartInstance = ref(new (mockedChart as any)() as Chart)
       const rendering = ref(true)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
       expect(needsUpdate.value).toBe(false)
@@ -150,21 +131,21 @@ describe('updateChartInstance', () => {
     })
 
     it('should do nothing when the chart instance is null', async () => {
-      const chartInstance = ref(null)
+      mockedChart.mockClear()
+
+      chartInstance = ref(null)
       const rendering = ref(false)
       const needsUpdate = ref(false)
-      const dummyValue = {}
-      const emitFn = jest.fn()
 
       updateChartInstance(chartInstance, rendering, needsUpdate, field, dummyValue, emitFn)
 
       expect(needsUpdate.value).toBe(false)
-      expect(Chart).not.toBeCalled()
+      expect(mockedChart).not.toBeCalled()
 
       await nextTick()
       expect(emitFn).not.toBeCalled()
       expect(needsUpdate.value).toBe(false)
-      expect(Chart).not.toBeCalled()
+      expect(mockedChart).not.toBeCalled()
     })
   })
 
