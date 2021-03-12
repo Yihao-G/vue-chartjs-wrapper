@@ -1,15 +1,20 @@
 import { mount } from '@vue/test-utils'
 import { mocked } from 'ts-jest/utils'
-import { nextTick } from 'vue'
+import { nextTick, reactive } from 'vue'
 
 jest.mock('chart.js')
+jest.mock('@/functions/updatePlugins')
 // eslint-disable-next-line import/first
 import Chart, { ChartData, ChartOptions, ChartType, PluginServiceRegistrationOptions } from 'chart.js'
+// eslint-disable-next-line import/first
+import updatePlugins from '@/functions/updatePlugins'
 // eslint-disable-next-line import/first
 import ChartComponent from '@/Chart.vue'
 
 describe('Chart component', () => {
   const mockedChart = mocked(Chart, true)
+  const mockedUpdatePlugins = mocked(updatePlugins)
+
   let type: ChartType | string
   let data: ChartData
   let options: ChartOptions
@@ -32,12 +37,13 @@ describe('Chart component', () => {
 
   beforeEach(async () => {
     mockedChart.mockClear()
+    mockedUpdatePlugins.mockClear()
 
     // prepare Chart component
     type = 'bar'
     data = { labels: ['foo', 'bar', 'baz'] }
     options = { aspectRatio: 1 }
-    plugins = [{ [Symbol('plugin1')]: null }]
+    plugins = reactive([{ [Symbol('plugin1')]: null }])
     wrapper = mount(ChartComponent, {
       props: {
         type,
@@ -126,8 +132,15 @@ describe('Chart component', () => {
     expect(wrapper.emitted()['chart:update'][0]).toStrictEqual([])
   })
 
-  it('should update plugins', () => {
+  it('should update plugins', async () => {
+    const oldPlugins = plugins.slice()
+
     plugins.push({ [Symbol('new plugin')]: null })
+
+    await nextTick()
+
+    expect(mockedUpdatePlugins).toBeCalledTimes(1)
+    expect(mockedUpdatePlugins).toBeCalledWith(plugins, oldPlugins)
 
     expectChartInstanceNotRecreated()
     expect(mockedChart.mock.instances[0].update).not.toBeCalled()
