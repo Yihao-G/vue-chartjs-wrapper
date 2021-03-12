@@ -31,13 +31,15 @@
   "main": "./dist/vue-chartjs-wrapper.umd.js",
   "unpkg": "./dist/vue-chartjs-wrapper.umd.min.js",
   "types": "./dist/src/index.d.ts",
-  "dependencies": {
-    "chart.js": "^2.9.4",
-    "clone-deep": "^4.0.1",
+  "peerDependencies": {
+    "chart.js": "^2.0.0",
     "vue": "^3.0.0"
   },
-  "devDependencies": {
+  "dependencies": {
     "@types/chart.js": "^2.9.31",
+    "clone-deep": "^4.0.1"
+  },
+  "devDependencies": {
     "@types/clone-deep": "^4.0.1",
     "@types/jest": "^26.0.20",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
@@ -51,6 +53,7 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "^2.0.0-0",
+    "chart.js": "^2.9.4",
     "eslint": "^7.21.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
@@ -59,6 +62,7 @@
     "eslint-plugin-vue": "^7.7.0",
     "lint-staged": "^10.5.4",
     "typescript": "^4.2.3",
+    "vue": "^3.0.0",
     "vue-jest": "^5.0.0-0"
   },
   "gitHooks": {
