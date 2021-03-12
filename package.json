@@ -4,10 +4,15 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib src/index.ts && tsc --emitDeclarationOnly",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "dist/*"
+  ],
+  "main": "./dist/vue-chartjs-wrapper.umd.js",
+  "types": "./dist/src/index.d.ts",
   "dependencies": {
     "chart.js": "^2.9.4",
     "clone-deep": "^4.0.1",
